@@ -9,10 +9,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import br.com.pereiraeng.core.Flow;
 import br.com.pereiraeng.icons.Icons;
-import br.com.pereiraeng.io.flow.Flow;
+import br.com.pereiraeng.icons.PereiraIcon;
 import br.com.pereiraeng.swing.App;
-import br.com.pereiraeng.swing.SwingUtils;
 import br.com.pereiraeng.swing.button.SemiToggleButton;
 import br.com.pereiraeng.swing.input.IPinput;
 import br.com.pereiraeng.swing.time.ClockPanel;
@@ -68,8 +68,8 @@ public abstract class AbstractClient<K> extends JPanel implements App, ActionLis
 		if (flag) // primeiro start
 			this.clock.play();
 
-		syncAssync = new SemiToggleButton(Icons.loadUtilsIcon(("Refresh.gif")));
-		syncAssync.setPreferredSize(SwingUtils.DIM_BUTTON_ICON);
+		syncAssync = new SemiToggleButton(PereiraIcon.REFRESH.create());
+		syncAssync.setPreferredSize(Icons.DIM_BUTTON_ICON);
 		syncAssync.setToolTipText(
 				"<html>Atualizar<br>(<strong>clique com o botão direito do mouse para atualizar a cada minuto</strong>)</html>");
 		syncAssync.setToggleCommand("A");

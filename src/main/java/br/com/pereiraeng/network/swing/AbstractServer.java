@@ -18,14 +18,15 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import br.com.pereiraeng.icons.Icons;
-import br.com.pereiraeng.io.flow.Flow;
+import br.com.pereiraeng.core.Flow;
+import br.com.pereiraeng.icons.PereiraIcon;
 import br.com.pereiraeng.network.Connn;
 import br.com.pereiraeng.swing.button.ChangeableButton;
 import br.com.pereiraeng.swing.image.Pointer;
 import br.com.pereiraeng.swing.input.IPinput;
 
-public abstract class AbstractServer<K> extends JPanel implements Runnable, Flow<K>, KeyListener, ActionListener {
+public abstract class AbstractServer<K> extends JPanel
+		implements Runnable, Flow<K>, KeyListener, ActionListener, AutoCloseable {
 	private static final long serialVersionUID = -8708609540524131239L;
 
 	protected static final String PREFIX = "_N";
@@ -62,14 +63,14 @@ public abstract class AbstractServer<K> extends JPanel implements Runnable, Flow
 			int p = ipv4.lastIndexOf('.') + 1;
 			p0.add(ipInput = new IPinput(ipv4.substring(0, p), Integer.parseInt(ipv4.substring(p)), port));
 		}
-		
+
 		ChangeableButton onOff = new ChangeableButton(new Icon[] { new Pointer(Pointer.BAD), new Pointer(Pointer.OK) });
 		onOff.setActionCommand("S");
 		onOff.setToolTipText("Ligar/desligar servidor");
 		onOff.addActionListener(this);
 		p0.add(onOff);
 
-		JButton b = new JButton(Icons.loadUtilsIcon("clear.png"));
+		JButton b = new JButton(PereiraIcon.CLEAR.create());
 		b.addActionListener(this);
 		b.setActionCommand("C");
 		b.setToolTipText("Limpar log");
@@ -110,8 +111,6 @@ public abstract class AbstractServer<K> extends JPanel implements Runnable, Flow
 		this.user = user;
 	}
 
-	public abstract void close();
-
 	// ------------------- LISTENER -------------------
 
 	@Override
@@ -129,8 +128,13 @@ public abstract class AbstractServer<K> extends JPanel implements Runnable, Flow
 			active = ((ChangeableButton) e.getSource()).getSelected() == 1;
 			if (active)
 				new Thread(this).start();
-			else
-				close();
+			else {
+				try {
+					close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
 		} else if (c == 'C') { // limpar log
 			log.setText("");
 			console.setText("");
